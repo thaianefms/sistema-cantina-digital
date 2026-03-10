@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Forma de Pagamento - Sistema Cantina Digital{% endblock %}
+
+{% block content %}
+<h2>✏️ Editar Forma de Pagamento</h2>
+
+<div class="form-card">
+    <form method="POST">
+        {% csrf_token %}
+        
+<div class="form-group">
+    <label for="tipo">Tipo de Pagamento:</label>
+    <select id="tipo" name="tipo" required>
+        <option value="vale_lanche" {% if forma.tipo == 'vale_lanche' %}selected{% endif %}>Vale-Lanche</option>
+        <option value="vale_bebida" {% if forma.tipo == 'vale_bebida' %}selected{% endif %}>Vale-Bebida</option>
+        <option value="pix" {% if forma.tipo == 'pix' %}selected{% endif %}>PIX</option>
+    </select>
+</div>
+        
+        <div class="form-group">
+            <label for="descricao">Descrição:</label>
+            <textarea id="descricao" name="descricao" placeholder="Descreva a forma de pagamento...">{{ forma.descricao }}</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="ativo">
+                <input type="checkbox" id="ativo" name="ativo" {% if forma.ativo %}checked{% endif %}>
+                Ativo
+            </label>
+        </div>
+        
+        <div class="actions">
+            <button type="submit" class="btn btn-success">Salvar Alterações</button>
+            <a href="{% url 'listar_pagamentos' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

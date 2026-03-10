@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Estoque - Sistema Cantina Digital{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+    <h2>🍎 Gerenciamento de Estoque</h2>
+    <a href="{% url 'criar_alimento' %}" class="btn btn-success">+ Novo Alimento</a>
+</div>
+
+{% if alimentos %}
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Quantidade</th>
+            <th>Preço</th>
+            <th>Status</th>
+            <th>Última Atualização</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for alimento in alimentos %}
+        <tr>
+            <td>{{ alimento.id }}</td>
+            <td>{{ alimento.nome }}</td>
+            <td>{{ alimento.quantidade_disponivel }} un.</td>
+            <td>R$ {{ alimento.preco|floatformat:2 }}</td>
+            <td>
+                {% if alimento.ativo %}
+                    <span style="color: green; font-weight: bold;">✓ Ativo</span>
+                {% else %}
+                    <span style="color: red; font-weight: bold;">✗ Inativo</span>
+                {% endif %}
+            </td>
+            <td>{{ alimento.data_atualizacao|date:"d/m/Y H:i" }}</td>
+            <td>
+                <div class="actions">
+                    <a href="{% url 'editar_alimento' alimento.id %}" class="btn btn-primary">Editar</a>
+                    <a href="{% url 'deletar_alimento' alimento.id %}" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja deletar?')">Deletar</a>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="no-data">
+    <p>Nenhum alimento cadastrado. <a href="{% url 'criar_alimento' %}">Criar um novo alimento</a></p>
+</div>
+{% endif %}
+{% endblock %}

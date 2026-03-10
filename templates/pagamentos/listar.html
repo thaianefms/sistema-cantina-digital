@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Pagamentos - Sistema Cantina Digital{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+    <h2>💳 Gerenciamento de Formas de Pagamento</h2>
+    <a href="{% url 'criar_pagamento' %}" class="btn btn-success">+ Nova Forma</a>
+</div>
+
+{% if formas %}
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tipo</th>
+            <th>Descrição</th>
+            <th>Status</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for forma in formas %}
+        <tr>
+            <td>{{ forma.id }}</td>
+            <td><strong>{{ forma.get_tipo_display }}</strong></td>
+            <td>{{ forma.descricao|default:"Sem descrição" }}</td>
+            <td>
+                {% if forma.ativo %}
+                    <span style="color: green; font-weight: bold;">✓ Ativo</span>
+                {% else %}
+                    <span style="color: red; font-weight: bold;">✗ Inativo</span>
+                {% endif %}
+            </td>
+            <td>
+                <div class="actions">
+                    <a href="{% url 'editar_pagamento' forma.id %}" class="btn btn-primary">Editar</a>
+                    <a href="{% url 'deletar_pagamento' forma.id %}" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja deletar?')">Deletar</a>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="no-data">
+    <p>Nenhuma forma de pagamento cadastrada. <a href="{% url 'criar_pagamento' %}">Criar uma nova forma</a></p>
+</div>
+{% endif %}
+{% endblock %}

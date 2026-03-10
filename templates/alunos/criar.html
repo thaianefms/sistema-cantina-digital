@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Criar Aluno - Sistema Cantina Digital{% endblock %}
+
+{% block content %}
+<h2>➕ Criar Novo Aluno</h2>
+
+<div class="form-card">
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="nome">Nome Completo:</label>
+            <input type="text" id="nome" name="nome" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="matricula">Matrícula:</label>
+            <input type="text" id="matricula" name="matricula" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="turma">Turma:</label>
+            <input type="text" id="turma" name="turma" placeholder="Ex: 5º Ano A" required>
+        </div>
+        
+        <div class="actions">
+            <button type="submit" class="btn btn-success">Salvar Aluno</button>
+            <a href="{% url 'listar_alunos' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+# Ambiente Virtual
+venv/
+env/
+ENV/
+
+# Banco de Dados
+*.sqlite3
+db.sqlite3
+
+# Arquivos do Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Arquivos do Django
+*.log
+local_settings.py
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Sistema Operacional
+.DS_Store
+Thumbs.db
+
+# Variáveis de Ambiente
+.env
+.env.local

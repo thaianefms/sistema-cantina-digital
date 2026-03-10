@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Alunos - Sistema Cantina Digital{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+    <h2>👨‍🎓 Gerenciamento de Alunos</h2>
+    <a href="{% url 'criar_aluno' %}" class="btn btn-success">+ Novo Aluno</a>
+</div>
+
+{% if alunos %}
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Matrícula</th>
+            <th>Turma</th>
+            <th>Data de Cadastro</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for aluno in alunos %}
+        <tr>
+            <td>{{ aluno.id }}</td>
+            <td>{{ aluno.nome }}</td>
+            <td>{{ aluno.matricula }}</td>
+            <td>{{ aluno.turma }}</td>
+            <td>{{ aluno.data_criacao|date:"d/m/Y H:i" }}</td>
+            <td>
+                <div class="actions">
+                    <a href="{% url 'editar_aluno' aluno.id %}" class="btn btn-primary">Editar</a>
+                    <a href="{% url 'deletar_aluno' aluno.id %}" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja deletar?')">Deletar</a>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="no-data">
+    <p>Nenhum aluno cadastrado. <a href="{% url 'criar_aluno' %}">Criar um novo aluno</a></p>
+</div>
+{% endif %}
+{% endblock %}

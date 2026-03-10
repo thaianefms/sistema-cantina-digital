@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Pedido - Sistema Cantina Digital{% endblock %}
+
+{% block content %}
+<h2>✏️ Editar Pedido #{{ pedido.id }}</h2>
+
+<div class="form-card">
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="aluno">Aluno:</label>
+            <select id="aluno" name="aluno" required>
+                <option value="">-- Selecione um aluno --</option>
+                {% for aluno in alunos %}
+                <option value="{{ aluno.id }}" {% if aluno.id == pedido.aluno.id %}selected{% endif %}>{{ aluno.nome }} ({{ aluno.matricula }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="alimento">Alimento:</label>
+            <select id="alimento" name="alimento" required>
+                <option value="">-- Selecione um alimento --</option>
+                {% for alimento in alimentos %}
+                <option value="{{ alimento.id }}" {% if alimento.id == pedido.alimento.id %}selected{% endif %}>{{ alimento.nome }} - R$ {{ alimento.preco|floatformat:2 }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="quantidade">Quantidade:</label>
+            <input type="number" id="quantidade" name="quantidade" min="1" value="{{ pedido.quantidade }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="forma_pagamento">Forma de Pagamento:</label>
+            <select id="forma_pagamento" name="forma_pagamento" required>
+                <option value="">-- Selecione uma forma --</option>
+                {% for forma in formas_pagamento %}
+                <option value="{{ forma.id }}" {% if forma.id == pedido.forma_pagamento.id %}selected{% endif %}>{{ forma.get_tipo_display }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="status">Status do Pedido:</label>
+            <select id="status" name="status" required>
+                <option value="pendente" {% if pedido.status == 'pendente' %}selected{% endif %}>⏳ Pendente</option>
+                <option value="preparando" {% if pedido.status == 'preparando' %}selected{% endif %}>👨‍🍳 Preparando</option>
+                <option value="pronto" {% if pedido.status == 'pronto' %}selected{% endif %}>✓ Pronto</option>
+                <option value="entregue" {% if pedido.status == 'entregue' %}selected{% endif %}>✓✓ Entregue</option>
+            </select>
+        </div>
+        
+        <div style="margin-top: 20px; padding: 15px; background-color: #ecf0f1; border-radius: 5px; font-size: 18px; font-weight: bold;">
+            Total Atual: R$ {{ pedido.total|floatformat:2 }}
+        </div>
+        
+        <div class="actions">
+            <button type="submit" class="btn btn-success">Salvar Alterações</button>
+            <a href="{% url 'listar_pedidos' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Script para calcular o total quando o alimento ou quantidade mudam
+    document.getElementById('alimento').addEventListener('change', calcularTotal);
+    document.getElementById('quantidade').addEventListener('change', calcularTotal);
+    
+    function calcularTotal() {
+        const alimentoSelect = document.getElementById('alimento');
+        const quantidadeInput = document.getElementById('quantidade');
+        
+        if (alimentoSelect.value && quantidadeInput.value) {
+            const selectedOption = alimentoSelect.options[alimentoSelect.selectedIndex];
+            const preco = parseFloat(selectedOption.text.split('R$ ')[1]);
+            const quantidade = parseInt(quantidadeInput.value);
+            const total = (preco * quantidade).toFixed(2);
+            
+            // Atualiza o elemento de total
+            const totalDisplay = document.querySelector('[style*="Total Atual"]');
+            if (totalDisplay) {
+                totalDisplay.textContent = `Total Novo: R$ ${total}`;
+            }
+        }
+    }
+</script>
+{% endblock %}
