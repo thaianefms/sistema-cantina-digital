@@ -16,7 +16,7 @@ def criar_pedido(request):
     if request.method == 'POST':
         aluno_id = request.POST.get('aluno')
         alimento_id = request.POST.get('alimento')
-        quantidade = int(request.POST.get('quantidade', 1))  # Converter para int
+        quantidade = int(request.POST.get('quantidade', 1))
         forma_pagamento_id = request.POST.get('forma_pagamento')
         status = request.POST.get('status')
         
@@ -25,6 +25,12 @@ def criar_pedido(request):
             alimento = Alimento.objects.get(id=alimento_id)
             forma_pagamento = FormaPagamento.objects.get(id=forma_pagamento_id)
             
+            # Verificar se tem quantidade suficiente no estoque
+            if alimento.quantidade_disponivel < quantidade:
+                messages.error(request, f'Quantidade insuficiente! Disponível: {alimento.quantidade_disponivel}')
+                return redirect('criar_pedido')
+            
+            # Criar o pedido
             pedido = Pedido.objects.create(
                 aluno=aluno,
                 alimento=alimento,
@@ -33,7 +39,11 @@ def criar_pedido(request):
                 status=status
             )
             
-            messages.success(request, 'Pedido criado com sucesso!')
+            # Diminuir a quantidade no estoque
+            alimento.quantidade_disponivel -= quantidade
+            alimento.save()
+            
+            messages.success(request, 'Pedido criado com sucesso! Estoque atualizado.')
             return redirect('listar_pedidos')
         except Exception as e:
             messages.error(request, f'Erro ao criar pedido: {str(e)}')
@@ -54,14 +64,42 @@ def editar_pedido(request, id):
     pedido = get_object_or_404(Pedido, id=id)
     
     if request.method == 'POST':
-        pedido.aluno_id = request.POST.get('aluno')
-        pedido.alimento_id = request.POST.get('alimento')
-        pedido.quantidade = int(request.POST.get('quantidade', 1))  # Converter para int
-        pedido.forma_pagamento_id = request.POST.get('forma_pagamento')
-        pedido.status = request.POST.get('status')
-        pedido.save()
-        messages.success(request, 'Pedido atualizado com sucesso!')
-        return redirect('listar_pedidos')
+        nova_quantidade = int(request.POST.get('quantidade', 1))
+        novo_alimento_id = request.POST.get('alimento')
+        
+        try:
+            # Se mudou o alimento ou a quantidade, precisamos ajustar o estoque
+            if pedido.alimento.id != int(novo_alimento_id) or pedido.quantidade != nova_quantidade:
+                
+                # Devolver a quantidade anterior ao estoque
+                alimento_antigo = pedido.alimento
+                alimento_antigo.quantidade_disponivel += pedido.quantidade
+                alimento_antigo.save()
+                
+                # Pegar o novo alimento
+                novo_alimento = Alimento.objects.get(id=novo_alimento_id)
+                
+                # Verificar se tem quantidade suficiente no novo alimento
+                if novo_alimento.quantidade_disponivel < nova_quantidade:
+                    messages.error(request, f'Quantidade insuficiente! Disponível: {novo_alimento.quantidade_disponivel}')
+                    return redirect('editar_pedido', id=pedido.id)
+                
+                # Diminuir a nova quantidade do novo alimento
+                novo_alimento.quantidade_disponivel -= nova_quantidade
+                novo_alimento.save()
+            
+            # Atualizar o pedido
+            pedido.aluno_id = request.POST.get('aluno')
+            pedido.alimento_id = novo_alimento_id
+            pedido.quantidade = nova_quantidade
+            pedido.forma_pagamento_id = request.POST.get('forma_pagamento')
+            pedido.status = request.POST.get('status')
+            pedido.save()
+            
+            messages.success(request, 'Pedido atualizado com sucesso! Estoque ajustado.')
+            return redirect('listar_pedidos')
+        except Exception as e:
+            messages.error(request, f'Erro ao atualizar pedido: {str(e)}')
     
     alunos = Aluno.objects.all()
     alimentos = Alimento.objects.all()
@@ -78,6 +116,12 @@ def editar_pedido(request, id):
 # View para deletar pedido
 def deletar_pedido(request, id):
     pedido = get_object_or_404(Pedido, id=id)
+    
+    # Devolver a quantidade ao estoque
+    alimento = pedido.alimento
+    alimento.quantidade_disponivel += pedido.quantidade
+    alimento.save()
+    
     pedido.delete()
-    messages.success(request, 'Pedido deletado com sucesso!')
+    messages.success(request, 'Pedido deletado com sucesso! Quantidade devolvida ao estoque.')
     return redirect('listar_pedidos')
