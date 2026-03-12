@@ -74,7 +74,7 @@ def editar_pedido(request, id):
         'formas_pagamento': formas_pagamento,
     }
     return render(request, 'pedidos/editar.html', context)
-
+    
 # View para deletar pedido
 def deletar_pedido(request, id):
     pedido = get_object_or_404(Pedido, id=id)
