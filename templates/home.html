@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Sistema Cantina Digital{% endblock %}
+
+{% block content %}
+<style>
+    .hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 60px 20px;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .hero h1 {
+        font-size: 48px;
+        margin-bottom: 20px;
+    }
+    
+    .hero p {
+        font-size: 18px;
+        margin-bottom: 30px;
+    }
+    
+    .hero a {
+        display: inline-block;
+        padding: 12px 30px;
+        background-color: white;
+        color: #667eea;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        margin: 5px;
+        transition: transform 0.3s;
+    }
+    
+    .hero a:hover {
+        transform: scale(1.05);
+    }
+    
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+    
+    .stat-card {
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        text-align: center;
+        border-left: 5px solid #3498db;
+    }
+    
+    .stat-card.alunos {
+        border-left-color: #3498db;
+    }
+    
+    .stat-card.alimentos {
+        border-left-color: #2ecc71;
+    }
+    
+    .stat-card.pedidos {
+        border-left-color: #f39c12;
+    }
+    
+    .stat-card.pendentes {
+        border-left-color: #e74c3c;
+    }
+    
+    .stat-number {
+        font-size: 48px;
+        font-weight: bold;
+        color: #2c3e50;
+        margin: 10px 0;
+    }
+    
+    .stat-label {
+        color: #7f8c8d;
+        font-size: 14px;
+        text-transform: uppercase;
+    }
+    
+    .quick-links {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 40px;
+    }
+    
+    .quick-link {
+        display: block;
+        padding: 20px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        text-decoration: none;
+        color: #2c3e50;
+        transition: all 0.3s;
+        text-align: center;
+        font-weight: bold;
+    }
+    
+    .quick-link:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .quick-link.alunos {
+        border-top: 4px solid #3498db;
+    }
+    
+    .quick-link.estoque {
+        border-top: 4px solid #2ecc71;
+    }
+    
+    .quick-link.pedidos {
+        border-top: 4px solid #f39c12;
+    }
+    
+    .quick-link.pagamentos {
+        border-top: 4px solid #9b59b6;
+    }
+    
+    .info-section {
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .info-section h3 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+    }
+    
+    .info-section ul {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .info-section li {
+        padding: 10px 0;
+        border-bottom: 1px solid #ecf0f1;
+    }
+    
+    .info-section li:last-child {
+        border-bottom: none;
+    }
+    
+    .info-section li:before {
+        content: "✓ ";
+        color: #27ae60;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+</style>
+
+<div class="hero">
+    <h1>🍽️ Bem-vindo ao Sistema Cantina Digital!</h1>
+    <p>Gerenciamento completo de pedidos para sua escola</p>
+    <a href="{% url 'criar_pedido' %}">📦 Fazer um Pedido Agora</a>
+    <a href="{% url 'listar_pedidos' %}">📋 Ver Todos os Pedidos</a>
+</div>
+
+<h2 style="margin-bottom: 30px;">📊 Resumo do Sistema</h2>
+
+<div class="stats">
+    <div class="stat-card alunos">
+        <div class="stat-label">Alunos Cadastrados</div>
+        <div class="stat-number">{{ total_alunos }}</div>
+        <a href="{% url 'listar_alunos' %}" class="btn btn-primary" style="margin-top: 10px;">Ver Alunos</a>
+    </div>
+    
+    <div class="stat-card alimentos">
+        <div class="stat-label">Alimentos em Estoque</div>
+        <div class="stat-number">{{ total_alimentos }}</div>
+        <a href="{% url 'listar_alimentos' %}" class="btn btn-primary" style="margin-top: 10px;">Ver Estoque</a>
+    </div>
+    
+    <div class="stat-card pedidos">
+        <div class="stat-label">Total de Pedidos</div>
+        <div class="stat-number">{{ total_pedidos }}</div>
+        <a href="{% url 'listar_pedidos' %}" class="btn btn-primary" style="margin-top: 10px;">Ver Pedidos</a>
+    </div>
+    
+    <div class="stat-card pendentes">
+        <div class="stat-label">⚠️ Pedidos Pendentes</div>
+        <div class="stat-number" style="color: #e74c3c;">{{ pedidos_pendentes }}</div>
+        <a href="{% url 'listar_pedidos' %}" class="btn btn-danger" style="margin-top: 10px;">Atender Agora</a>
+    </div>
+</div>
+
+<h2 style="margin-bottom: 30px;">🚀 Acesso Rápido</h2>
+
+<div class="quick-links">
+    <a href="{% url 'listar_alunos' %}" class="quick-link alunos">
+        👨‍🎓<br>
+        Alunos
+    </a>
+    <a href="{% url 'listar_alimentos' %}" class="quick-link estoque">
+        🍎<br>
+        Estoque
+    </a>
+    <a href="{% url 'listar_pedidos' %}" class="quick-link pedidos">
+        📦<br>
+        Pedidos
+    </a>
+    <a href="{% url 'listar_pagamentos' %}" class="quick-link pagamentos">
+        💳<br>
+        Pagamentos
+    </a>
+</div>
+
+<div class="info-section">
+    <h3>ℹ️ Sobre o Sistema</h3>
+    <ul>
+        <li>Cadastro e gerenciamento de alunos</li>
+        <li>Controle de estoque de alimentos e bebidas</li>
+        <li>Criação e rastreamento de pedidos</li>
+        <li>Múltiplas formas de pagamento (Vale-Lanche, Vale-Bebida e PIX)</li>
+        <li>Acompanhamento de status dos pedidos</li>
+        <li>Painel administrativo completo</li>
+    </ul>
+</div>
+{% endblock %}

@@ -1,6 +1,23 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Aluno
+from pedidos.models import Pedido
+from estoque.models import Alimento
+
+def home(request):
+    """View da página inicial do sistema"""
+    total_alunos = Aluno.objects.count()
+    total_alimentos = Alimento.objects.count()
+    total_pedidos = Pedido.objects.count()
+    pedidos_pendentes = Pedido.objects.filter(status='pendente').count()
+    
+    context = {
+        'total_alunos': total_alunos,
+        'total_alimentos': total_alimentos,
+        'total_pedidos': total_pedidos,
+        'pedidos_pendentes': pedidos_pendentes,
+    }
+    return render(request, 'home.html', context)
 
 # View para listar alunos
 def listar_alunos(request):

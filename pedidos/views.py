@@ -16,7 +16,7 @@ def criar_pedido(request):
     if request.method == 'POST':
         aluno_id = request.POST.get('aluno')
         alimento_id = request.POST.get('alimento')
-        quantidade = request.POST.get('quantidade')
+        quantidade = int(request.POST.get('quantidade', 1))  # Converter para int
         forma_pagamento_id = request.POST.get('forma_pagamento')
         status = request.POST.get('status')
         
@@ -56,7 +56,7 @@ def editar_pedido(request, id):
     if request.method == 'POST':
         pedido.aluno_id = request.POST.get('aluno')
         pedido.alimento_id = request.POST.get('alimento')
-        pedido.quantidade = request.POST.get('quantidade')
+        pedido.quantidade = int(request.POST.get('quantidade', 1))  # Converter para int
         pedido.forma_pagamento_id = request.POST.get('forma_pagamento')
         pedido.status = request.POST.get('status')
         pedido.save()
