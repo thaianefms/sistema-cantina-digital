@@ -1,9 +1,11 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Aluno
 from pedidos.models import Pedido
 from estoque.models import Alimento
 
+@login_required
 def home(request):
     """View da página inicial do sistema"""
     total_alunos = Aluno.objects.count()
@@ -20,12 +22,14 @@ def home(request):
     return render(request, 'home.html', context)
 
 # View para listar alunos
+@login_required
 def listar_alunos(request):
     alunos = Aluno.objects.all()
     context = {'alunos': alunos}
     return render(request, 'alunos/listar.html', context)
 
 # View para criar aluno
+@login_required
 def criar_aluno(request):
     if request.method == 'POST':
         nome = request.POST.get('nome')
@@ -42,6 +46,7 @@ def criar_aluno(request):
     return render(request, 'alunos/criar.html')
 
 # View para editar aluno
+@login_required
 def editar_aluno(request, id):
     aluno = get_object_or_404(Aluno, id=id)
     
@@ -57,6 +62,7 @@ def editar_aluno(request, id):
     return render(request, 'alunos/editar.html', context)
 
 # View para deletar aluno
+@login_required
 def deletar_aluno(request, id):
     aluno = get_object_or_404(Aluno, id=id)
     aluno.delete()

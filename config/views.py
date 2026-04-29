@@ -1,9 +1,11 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.utils import timezone
 from django.db.models import Sum
 from pedidos.models import Pedido
 from estoque.models import Alimento
 
+@login_required
 def home(request):
     # Fuso horário atual do Django
     hoje = timezone.localtime(timezone.now()).date()

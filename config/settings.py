@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-c-zch#4-)l!p9e(o48$6bg^=)r7226y&#03m7n__lqo+d4a8g=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['thwartly-cnidophorous-dewayne.ngrok-free.dev', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -119,3 +119,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Configurações de Login
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'login'

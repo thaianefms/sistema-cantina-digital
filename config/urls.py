@@ -20,6 +20,7 @@ from config import views  # Importar a view recém-criada
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),  # Rotas de login/logout nativas
     
     # Carregar o novo Dashboard
     path('', views.home, name='home'), 

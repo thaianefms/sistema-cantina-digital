@@ -1,14 +1,17 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Alimento
 
 # View para listar alimentos
+@login_required
 def listar_alimentos(request):
     alimentos = Alimento.objects.all()
     context = {'alimentos': alimentos}
     return render(request, 'estoque/listar.html', context)
 
 # View para criar alimento
+@login_required
 def criar_alimento(request):
     if request.method == 'POST':
         nome = request.POST.get('nome')
@@ -31,6 +34,7 @@ def criar_alimento(request):
     return render(request, 'estoque/criar.html')
 
 # View para editar alimento
+@login_required
 def editar_alimento(request, id):
     alimento = get_object_or_404(Alimento, id=id)
     
@@ -47,6 +51,7 @@ def editar_alimento(request, id):
     return render(request, 'estoque/editar.html', context)
 
 # View para deletar alimento
+@login_required
 def deletar_alimento(request, id):
     alimento = get_object_or_404(Alimento, id=id)
     alimento.delete()

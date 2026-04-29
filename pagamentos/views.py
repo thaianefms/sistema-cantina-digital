@@ -1,14 +1,17 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import FormaPagamento
 
 # View para listar formas de pagamento
+@login_required
 def listar_pagamentos(request):
     formas = FormaPagamento.objects.all()
     context = {'formas': formas}
     return render(request, 'pagamentos/listar.html', context)
 
 # View para criar forma de pagamento
+@login_required
 def criar_pagamento(request):
     if request.method == 'POST':
         tipo = request.POST.get('tipo')
@@ -29,6 +32,7 @@ def criar_pagamento(request):
     return render(request, 'pagamentos/criar.html')
 
 # View para editar forma de pagamento
+@login_required
 def editar_pagamento(request, id):
     forma = get_object_or_404(FormaPagamento, id=id)
     
@@ -44,6 +48,7 @@ def editar_pagamento(request, id):
     return render(request, 'pagamentos/editar.html', context)
 
 # View para deletar forma de pagamento
+@login_required
 def deletar_pagamento(request, id):
     forma = get_object_or_404(FormaPagamento, id=id)
     forma.delete()
