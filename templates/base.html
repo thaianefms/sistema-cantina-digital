@@ -4,165 +4,229 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Sistema Cantina Digital{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* Psicologia das Cores Aplicada à Alimentação:
+           - Laranja/Coral: Estimula o apetite, energia e chama atenção.
+           - Verde: Remete a frescor, saúde e ingredientes naturais.
+           - Amarelo: Traz alegria, calor e positividade.
+           - Fundo Claro: Sensação de limpeza e higiene. 
+        */
+        :root {
+            --primary: #f97316;       /* Laranja vibrante (Apetite/Energia) */
+            --primary-hover: #ea580c; 
+            --success: #10b981;       /* Verde fresco (Saúde/Natural) */
+            --success-hover: #059669;
+            --danger: #ef4444;        /* Vermelho (Urgência) */
+            --danger-hover: #dc2626;
+            --warning: #f59e0b;       /* Amarelo escuro (Alegria) */
+            --warning-hover: #d97706;
+            --text-main: #334155;     /* Texto escuro suave */
+            --text-muted: #64748b;    
+            --bg-body: #f8fafc;       /* Fundo super claro (Higiene/Limpeza) */
+            --bg-card: rgba(255, 255, 255, 0.98);
+            --sidebar-bg: #ffffff;    /* Sidebar branca para visual clean */
+            --sidebar-text: #475569;
+            --border-color: #e2e8f0;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            /* Fonte Nunito, arredondada e amigável */
+            font-family: 'Nunito', sans-serif;
         }
-        
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
-        }
-        
-        header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        header h1 {
-            margin-bottom: 10px;
-        }
-        
-        nav {
-            background-color: #34495e;
-            padding: 10px 20px;
+            background-color: var(--bg-body);
+            /* Imagem de fundo mais relacionada à comida, com overlay claro */
+            background-image: linear-gradient(rgba(248, 250, 252, 0.85), rgba(248, 250, 252, 0.95)), url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text-main);
             display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
+            min-height: 100vh;
         }
-        
-        nav a {
-            color: white;
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 20px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-header h2 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .sidebar-nav {
+            padding: 20px 0;
+            flex: 1;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 16px 24px;
+            color: var(--sidebar-text);
             text-decoration: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            gap: 14px;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-nav a:hover {
+            background-color: #fff7ed; /* Fundo laranjinha bem claro */
+            color: var(--primary);
+            border-left-color: var(--primary);
         }
         
-        nav a:hover {
-            background-color: #2c3e50;
+        .sidebar-nav a span {
+            font-size: 20px;
         }
-        
+
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .topbar {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            border-bottom: 1px solid rgba(255,255,255,0.5);
+        }
+
         .container {
+            padding: 30px;
             max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 20px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
         }
-        
-        .messages {
+
+        /* Card and Glassmorphism */
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            padding: 24px;
             margin-bottom: 20px;
         }
-        
-        .alert {
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-        
-        .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .alert-error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
+
+        /* Buttons */
         .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
             text-decoration: none;
-            transition: background-color 0.3s;
-            font-size: 14px;
+            font-weight: 700;
+            font-size: 15px;
+            transition: all 0.2s;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
         
-        .btn-primary {
-            background-color: #3498db;
-            color: white;
-        }
+        .btn-primary { background-color: var(--primary); color: white; }
+        .btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 6px 12px rgba(249, 115, 22, 0.2); }
         
-        .btn-primary:hover {
-            background-color: #2980b9;
-        }
+        .btn-success { background-color: var(--success); color: white; }
+        .btn-success:hover { background-color: var(--success-hover); transform: translateY(-2px); box-shadow: 0 6px 12px rgba(16, 185, 129, 0.2); }
         
-        .btn-success {
-            background-color: #27ae60;
-            color: white;
-        }
+        .btn-danger { background-color: var(--danger); color: white; }
+        .btn-danger:hover { background-color: var(--danger-hover); transform: translateY(-2px); }
+
+        .btn-warning { background-color: var(--warning); color: white; }
+        .btn-warning:hover { background-color: var(--warning-hover); transform: translateY(-2px); }
         
-        .btn-success:hover {
-            background-color: #229954;
+        .btn-secondary { background-color: var(--text-muted); color: white; }
+        .btn-secondary:hover { background-color: #475569; transform: translateY(-2px); }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
         }
-        
-        .btn-danger {
-            background-color: #e74c3c;
-            color: white;
-        }
-        
-        .btn-danger:hover {
-            background-color: #c0392b;
-        }
-        
-        .btn-secondary {
-            background-color: #95a5a6;
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            background-color: #7f8c8d;
-        }
-        
+
         table {
             width: 100%;
             border-collapse: collapse;
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            border-radius: 5px;
-            overflow: hidden;
         }
-        
+
         table thead {
-            background-color: #34495e;
-            color: white;
+            background-color: #f8fafc;
+            border-bottom: 2px solid var(--border-color);
         }
-        
+
         table th {
-            padding: 15px;
+            padding: 18px 16px;
             text-align: left;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 0.05em;
         }
-        
+
         table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #ecf0f1;
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-size: 15px;
+            font-weight: 600;
         }
-        
+
         table tbody tr:hover {
-            background-color: #f5f5f5;
+            background-color: #fff7ed; /* Efeito hover laranjinha na tabela */
         }
-        
+
+        /* Forms */
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
-        
+
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #2c3e50;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: var(--text-main);
+            font-size: 14px;
         }
-        
+
         input[type="text"],
         input[type="email"],
         input[type="number"],
@@ -170,88 +234,129 @@
         select,
         textarea {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #bdc3c7;
-            border-radius: 5px;
-            font-size: 14px;
-            font-family: Arial, sans-serif;
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-main);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background-color: #f8fafc;
         }
-        
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        input[type="number"]:focus,
-        input[type="date"]:focus,
-        select:focus,
-        textarea:focus {
+
+        input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
-        }
-        
-        textarea {
-            resize: vertical;
-            min-height: 100px;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.15);
+            background-color: white;
         }
         
         .form-card {
-            background-color: white;
-            padding: 30px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background: white;
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
             max-width: 600px;
             margin: 0 auto;
+            border: 1px solid var(--border-color);
         }
         
         .actions {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        /* Alerts/Messages */
+        .messages {
+            margin-bottom: 24px;
+        }
+
+        .alert {
+            padding: 16px 20px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            animation: slideIn 0.3s ease-out;
+            font-weight: 700;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .alert-success {
+            background-color: #ecfdf5;
+            color: #065f46;
+            border-left: 5px solid var(--success);
+        }
+
+        .alert-error {
+            background-color: #fef2f2;
+            color: #991b1b;
+            border-left: 5px solid var(--danger);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
         
-        footer {
-            background-color: #2c3e50;
-            color: white;
+        /* Footer styling */
+        .site-footer {
             text-align: center;
-            padding: 20px;
-            margin-top: 40px;
+            padding: 24px;
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 600;
+            border-top: 1px solid var(--border-color);
+            margin-top: auto; /* Empurra o footer para o final */
         }
-        
-        .no-data {
-            text-align: center;
-            padding: 40px;
-            color: #7f8c8d;
-        }
+
     </style>
 </head>
 <body>
-    <header>
-        <h1>🍽️ Sistema Cantina Digital</h1>
-        <p>Gerenciamento de Pedidos de Lanches</p>
-    </header>
     
-    <nav>
-        <a href="{% url 'listar_alunos' %}">👨‍🎓 Alunos</a>
-        <a href="{% url 'listar_alimentos' %}">🍎 Estoque</a>
-        <a href="{% url 'listar_pedidos' %}">📦 Pedidos</a>
-        <a href="{% url 'listar_pagamentos' %}">💳 Pagamentos</a>
-    </nav>
-    
-    <div class="container">
-        {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-            {% endfor %}
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2><span>🍕</span> Cantina Digital</h2>
         </div>
-        {% endif %}
+        <nav class="sidebar-nav">
+            <a href="{% url 'home' %}"><span>📊</span> Dashboard</a>
+            <a href="{% url 'listar_alunos' %}"><span>👨‍🎓</span> Alunos</a>
+            <a href="{% url 'listar_alimentos' %}"><span>🍎</span> Estoque</a>
+            <a href="{% url 'listar_pedidos' %}"><span>📦</span> Pedidos</a>
+            <a href="{% url 'listar_pagamentos' %}"><span>💳</span> Pagamentos</a>
+        </nav>
+    </aside>
+
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div>
+                <h3 style="color: var(--text-muted); font-weight: 700;">Bem-vindo(a) à cantina! 👋</h3>
+            </div>
+            <div>
+                <span style="font-weight: 800; color: var(--primary); background: #fff7ed; padding: 6px 12px; border-radius: 20px;">Sistema Ativo</span>
+            </div>
+        </header>
+
+        <main class="container">
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            {% block content %}{% endblock %}
+        </main>
         
-        {% block content %}{% endblock %}
+        <footer class="site-footer">
+            &copy; 2026 Sistema Cantina Digital. Todos os direitos reservados.
+        </footer>
     </div>
-    
-    <footer>
-        <p>&copy; 2026 Sistema Cantina Digital - Todos os direitos reservados</p>
-    </footer>
+
 </body>
 </html>

@@ -16,9 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from config import views  # Importar a view recém-criada
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
+    # Carregar o novo Dashboard
+    path('', views.home, name='home'), 
+    
     path('', include('alunos.urls')),
     path('', include('estoque.urls')),
     path('', include('pedidos.urls')),
