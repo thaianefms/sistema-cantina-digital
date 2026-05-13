@@ -1,10 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Sistema Cantina Digital{% endblock %}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>{% block title %}Cantina - Colégio Paineira{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         /* Psicologia das Cores Aplicada à Alimentação:
            - Laranja/Coral: Estimula o apetite, energia e chama atenção.
@@ -12,54 +14,78 @@
            - Amarelo: Traz alegria, calor e positividade.
            - Fundo Claro: Sensação de limpeza e higiene. 
         */
-            
         :root {
-            --primary: #f97316;       /* Laranja vibrante (Apetite/Energia) */
-            --primary-hover: #ea580c; 
-            --success: #10b981;       /* Verde fresco (Saúde/Natural) */
+            /* Cores do Colégio Paineira: Amarelo e Marrom */
+            --primary: #eab308;       /* Amarelo Paineira */
+            --primary-hover: #ca8a04;
+            --success: #10b981;
             --success-hover: #059669;
-            --danger: #ef4444;        /* Vermelho (Urgência) */
+            --danger: #ef4444;
             --danger-hover: #dc2626;
-            --warning: #f59e0b;       /* Amarelo escuro (Alegria) */
+            --warning: #f59e0b;
             --warning-hover: #d97706;
-            --text-main: #334155;     /* Texto escuro suave */
-            --text-muted: #64748b;    
-            --bg-body: #f8fafc;       /* Fundo super claro (Higiene/Limpeza) */
-            --bg-card: rgba(255, 255, 255, 0.98);
-            --sidebar-bg: #ffffff;    /* Sidebar branca para visual clean */
-            --sidebar-text: #475569;
-            --border-color: #e2e8f0;
+            
+            --text-main: #451a03;     /* Marrom Escuro para texto */
+            --text-muted: #78350f;
+            --bg-body: #fdfbf7;       /* Branco levemente creme */
+            --bg-card: #ffffff;
+            --sidebar-bg: #ffffff;
+            --sidebar-text: #451a03;
+            --sidebar-hover: #fef9c3; /* Amarelo bem clarinho ao passar o mouse */
+            --border-color: #f3e8d2;
+            --chart-grid: #e2e8f0;
+            --shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03), 0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03);
+        }
+
+        [data-theme="dark"] {
+            --primary: #eab308;       /* Amarelo vibrante mantido */
+            --primary-hover: #facc15;
+            --success: #10b981;
+            --success-hover: #059669;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            
+            --text-main: #f9fafb;     /* Branco brilhante */
+            --text-muted: #9ca3af;    /* Cinza neutro legível */
+            --bg-body: #111827;       /* Fundo quase-preto limpo */
+            --bg-card: #1f2937;       /* Cards em cinza escuro moderno */
+            --sidebar-bg: #1f2937;
+            --sidebar-text: #f9fafb;
+            --sidebar-hover: #374151; /* Hover sutil */
+            --border-color: #374151;
+            --chart-grid: #374151;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            /* Fonte Nunito, arredondada e amigável */
             font-family: 'Nunito', sans-serif;
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
         }
 
         body {
             background-color: var(--bg-body);
-            /* Imagem de fundo mais relacionada à comida, com overlay claro */
-            background-image: linear-gradient(rgba(248, 250, 252, 0.85), rgba(248, 250, 252, 0.95)), url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
             color: var(--text-main);
             display: flex;
             min-height: 100vh;
         }
 
-        /* Sidebar Styling */
+        /* Sidebar Styling (Kero Floating Style) */
         .sidebar {
             width: 260px;
             background-color: var(--sidebar-bg);
             color: var(--sidebar-text);
             display: flex;
             flex-direction: column;
-            box-shadow: 2px 0 20px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow);
             z-index: 10;
+            margin: 16px;
+            border-radius: 16px;
+            height: calc(100vh - 32px);
+            position: fixed;
+            border: none;
         }
 
         .sidebar-header {
@@ -69,7 +95,7 @@
         }
 
         .sidebar-header h2 {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 800;
             color: var(--primary);
             display: flex;
@@ -96,13 +122,73 @@
         }
 
         .sidebar-nav a:hover {
-            background-color: #fff7ed; /* Fundo laranjinha bem claro */
+            background-color: var(--sidebar-hover);
             color: var(--primary);
             border-left-color: var(--primary);
         }
         
-        .sidebar-nav a span {
-            font-size: 20px;
+        .sidebar-nav a svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            opacity: 0.8;
+        }
+
+        /* Horizontal Layout CSS */
+        body[data-layout="horizontal"] {
+            flex-direction: column;
+        }
+
+        body[data-layout="horizontal"] .sidebar {
+            position: relative;
+            height: auto;
+            width: 100%;
+            flex-direction: row;
+            margin: 0;
+            border-radius: 0;
+            padding: 0 20px;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        body[data-layout="horizontal"] .sidebar-header {
+            border-bottom: none;
+            padding: 15px 30px 15px 0;
+            margin-right: 20px;
+            margin-bottom: 0;
+            border-right: 1px solid var(--border-color);
+        }
+
+        body[data-layout="horizontal"] .sidebar-nav {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            flex: 1;
+            padding: 0;
+        }
+
+        body[data-layout="horizontal"] .sidebar-nav a {
+            padding: 15px 20px;
+            border-left: none;
+            border-bottom: 3px solid transparent;
+            border-radius: 0;
+            margin-bottom: 0;
+            font-weight: 700;
+        }
+
+        body[data-layout="horizontal"] .sidebar-nav a:hover {
+            background-color: transparent;
+            border-bottom-color: var(--primary);
+        }
+
+        body[data-layout="horizontal"] .main-wrapper {
+            margin-left: 0;
+            padding: 20px;
+        }
+
+        body[data-layout="horizontal"] .topbar {
+            margin-bottom: 20px;
+            border-radius: 0 0 16px 16px;
         }
 
         .main-wrapper {
@@ -110,17 +196,19 @@
             display: flex;
             flex-direction: column;
             overflow-y: auto;
+            margin-left: 292px; /* Espaço para o menu flutuante (260px width + 16px margin * 2) */
+            padding: 16px 16px 16px 0;
         }
 
         .topbar {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
+            background: var(--sidebar-bg);
             padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-            border-bottom: 1px solid rgba(255,255,255,0.5);
+            box-shadow: var(--shadow);
+            border-radius: 16px;
+            margin-bottom: 24px;
         }
 
         .container {
@@ -131,15 +219,19 @@
             flex: 1;
         }
 
-        /* Card and Glassmorphism */
+        /* Card Kero */
         .glass-card {
             background: var(--bg-card);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
             border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-            padding: 24px;
-            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.02);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0.625rem 2.5rem rgba(4, 9, 20, 0.05), 0 1.25rem 1.875rem rgba(4, 9, 20, 0.05);
         }
 
         /* Buttons */
@@ -177,9 +269,9 @@
         /* Tables */
         .table-container {
             overflow-x: auto;
-            background: white;
+            background: var(--bg-card);
             border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow);
             border: 1px solid var(--border-color);
         }
 
@@ -189,7 +281,7 @@
         }
 
         table thead {
-            background-color: #f8fafc;
+            background-color: var(--sidebar-hover);
             border-bottom: 2px solid var(--border-color);
         }
 
@@ -212,7 +304,7 @@
         }
 
         table tbody tr:hover {
-            background-color: #fff7ed; /* Efeito hover laranjinha na tabela */
+            background-color: var(--sidebar-hover);
         }
 
         /* Forms */
@@ -242,21 +334,21 @@
             font-weight: 600;
             color: var(--text-main);
             transition: border-color 0.2s, box-shadow 0.2s;
-            background-color: #f8fafc;
+            background-color: var(--bg-body);
         }
 
         input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.15);
-            background-color: white;
+            box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.15);
+            background-color: var(--bg-card);
         }
         
         .form-card {
-            background: white;
+            background: var(--bg-card);
             padding: 35px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
             max-width: 600px;
             margin: 0 auto;
             border: 1px solid var(--border-color);
@@ -371,30 +463,74 @@
                 width: 100%;
             }
         }
+        
+        .theme-toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .theme-toggle-btn:hover {
+            background-color: var(--sidebar-hover);
+        }
+        .theme-toggle-btn svg {
+            width: 20px;
+            height: 20px;
+        }
     </style>
+    <script>
+        // Init theme immediately to prevent flashing
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        if(savedTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+    </script>
 </head>
 <body>
     
     <aside class="sidebar">
         <div class="sidebar-header">
-            <h2><span>🍕</span> Cantina Digital</h2>
+            <h2><img src="{% static 'android-chrome-512x512.png' %}" alt="Logo Paineira" style="width: 36px; height: 36px; border-radius: 8px;"> Paineira</h2>
         </div>
         <nav class="sidebar-nav">
-            <a href="{% url 'home' %}"><span>📊</span> Dashboard</a>
-            <a href="{% url 'listar_alunos' %}"><span>👨‍🎓</span> Alunos</a>
-            <a href="{% url 'listar_alimentos' %}"><span>🍎</span> Estoque</a>
-            <a href="{% url 'listar_pedidos' %}"><span>📦</span> Pedidos</a>
-            <a href="{% url 'listar_pagamentos' %}"><span>💳</span> Pagamentos</a>
+            <a href="{% url 'home' %}"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg> Dashboard</a>
+            <a href="{% url 'listar_alunos' %}"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Alunos</a>
+            <a href="{% url 'listar_alimentos' %}"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg> Estoque</a>
+            <a href="{% url 'listar_pedidos' %}"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> Pedidos</a>
+            <a href="{% url 'listar_pagamentos' %}"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg> Pagamentos</a>
         </nav>
     </aside>
 
     <div class="main-wrapper">
         <header class="topbar">
             <div>
-                <h3 style="color: var(--text-muted); font-weight: 700;">Bem-vindo(a) à cantina! 👋</h3>
+                <h3 style="color: var(--text-main); font-weight: 700;">Bem-vindo(a) ao painel de gestão</h3>
             </div>
-            <div>
-                <span style="font-weight: 800; color: var(--primary); background: #fff7ed; padding: 6px 12px; border-radius: 20px;">Sistema Ativo</span>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <select id="layoutToggle" style="background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; outline: none; box-shadow: var(--shadow);">
+                    <option value="vertical">Menu Vertical</option>
+                    <option value="horizontal">Menu Horizontal</option>
+                </select>
+                <button id="theme-toggle" class="theme-toggle-btn" title="Alternar Tema">
+                    <!-- Icone de Sol por padrao, ou lua, vamos usar um icone de meia lua para toggle -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                </button>
+                <span style="font-weight: 700; color: var(--success); background: rgba(52, 211, 153, 0.1); padding: 4px 10px; border-radius: 6px; font-size: 13px;">Online</span>
+                
+                {% if user.is_authenticated %}
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn" style="background: transparent; color: var(--danger); border: 1px solid var(--danger); padding: 6px 14px; font-size: 14px; border-radius: 6px; box-shadow: none;" title="Encerrar Sessão">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+                        Sair
+                    </button>
+                </form>
+                {% endif %}
             </div>
         </header>
 
@@ -413,9 +549,44 @@
         </main>
         
         <footer class="site-footer">
-            &copy; 2026 Sistema Cantina Digital. Todos os direitos reservados.
+            &copy; 2026 Colégio Paineira. Todos os direitos reservados.
         </footer>
     </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Init Layout
+            const layoutToggle = document.getElementById('layoutToggle');
+            const currentLayout = localStorage.getItem('layout') || 'vertical';
+            document.body.setAttribute('data-layout', currentLayout);
+            if (layoutToggle) layoutToggle.value = currentLayout;
 
+            // Layout Toggle Logic
+            if (layoutToggle) {
+                layoutToggle.addEventListener('change', (e) => {
+                    const newLayout = e.target.value;
+                    document.body.setAttribute('data-layout', newLayout);
+                    localStorage.setItem('layout', newLayout);
+                    window.dispatchEvent(new Event('resize'));
+                });
+            }
+
+            // Theme Toggle
+            const themeBtn = document.getElementById('theme-toggle');
+            if (themeBtn) {
+                themeBtn.addEventListener('click', () => {
+                    let current = document.documentElement.getAttribute('data-theme');
+                    if(current === 'dark') {
+                        document.documentElement.removeAttribute('data-theme');
+                        localStorage.setItem('theme', 'light');
+                    } else {
+                        document.documentElement.setAttribute('data-theme', 'dark');
+                        localStorage.setItem('theme', 'dark');
+                    }
+                    window.dispatchEvent(new Event('themeChanged'));
+                });
+            }
+        });
+    </script>
 </body>
 </html>

@@ -16,14 +16,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from config import views  # Importar a view recém-criada
+from config import views as config_views
+from usuarios.views import setup_view, CustomLoginView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include('django.contrib.auth.urls')),  # Rotas de login/logout nativas
+    path('setup/', setup_view, name='setup'),
+    path('accounts/login/', CustomLoginView.as_view(), name='login'),
+    path('accounts/', include('django.contrib.auth.urls')),  # Rotas de logout e password reset nativas
     
     # Carregar o novo Dashboard
-    path('', views.home, name='home'), 
+    path('', config_views.home, name='home'), 
+    
+    # Novas Rotas (Relatório e Webhook)
+    path('relatorio/mensal/', config_views.relatorio_mensal_pdf, name='relatorio_mensal'),
+    path('api/webhook/pedido/', config_views.webhook_pedido, name='webhook_pedido'),
+    path('api/dashboard/realtime/', config_views.dashboard_realtime, name='dashboard_realtime'),
     
     path('', include('alunos.urls')),
     path('', include('estoque.urls')),

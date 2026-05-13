@@ -1,0 +1,125 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Vendas - {{ mes_atual }}</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #eab308;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #451a03;
+            margin: 5px 0;
+        }
+        .header p {
+            color: #666;
+            margin: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f9fa;
+            color: #451a03;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #fcfcfc;
+        }
+        .total-section {
+            text-align: right;
+            font-size: 20px;
+            font-weight: bold;
+            color: #451a03;
+            background-color: #fef9c3;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        /* Otimizações para Impressão e PDF */
+        @media print {
+            body {
+                padding: 0;
+                margin: 1cm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Cantina Colégio Paineira</h1>
+        <p>Relatório de Vendas Fechadas</p>
+        <p><strong>Mês de Referência:</strong> {{ mes_atual }}</p>
+    </div>
+    
+    <div class="no-print" style="margin-bottom: 20px; text-align: center;">
+        <button onclick="window.print()" style="background: #eab308; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px;">
+            🖨️ Imprimir / Salvar PDF
+        </button>
+        <p style="color: #666; font-size: 14px; margin-top: 10px;">Dica: Na tela de impressão, em "Destino", selecione "Salvar como PDF".</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Data/Hora</th>
+                <th>Aluno</th>
+                <th>Produto</th>
+                <th>Quantidade</th>
+                <th>Pagamento</th>
+                <th>Total (R$)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pedido in pedidos %}
+            <tr>
+                <td>{{ pedido.data_pedido|date:"d/m/Y H:i" }}</td>
+                <td>{{ pedido.aluno.nome }}</td>
+                <td>{{ pedido.alimento.nome }}</td>
+                <td>{{ pedido.quantidade }}</td>
+                <td>{{ pedido.forma_pagamento.nome }}</td>
+                <td>R$ {{ pedido.total|floatformat:2 }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align: center;">Nenhuma venda registrada neste mês.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="total-section">
+        Faturamento Total no Mês: R$ {{ total_mes|floatformat:2 }}
+    </div>
+    
+    <script>
+        // Dispara a impressão automaticamente assim que carregar a página
+        window.onload = function() {
+            setTimeout(function() {
+                window.print();
+            }, 500);
+        };
+    </script>
+</body>
+</html>

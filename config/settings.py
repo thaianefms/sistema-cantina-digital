@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'estoque',
     'pedidos',
     'pagamentos',
+    'usuarios',
 ]
 
 MIDDLEWARE = [
@@ -122,7 +124,24 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    BASE_DIR / "imagens",
+]
+
 # Configurações de Login
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'login'
+
+# Configurações de E-mail (Envio de Token REST via SMTP)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER = os.environ.get('EMAIL_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS', '')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# Sessão (para o lembrar de mim)
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 30  # 30 dias
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Padrão: expira ao fechar navegador, a view de login alterará para False se marcado "Lembrar"
