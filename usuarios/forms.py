@@ -37,11 +37,22 @@ class SetupForm(forms.ModelForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        # Usa o email como username
         user.username = self.cleaned_data['email']
         user.set_password(self.cleaned_data['password'])
         user.is_staff = True
         user.is_superuser = True
+        if commit:
+            user.save()
+            Perfil.objects.create(user=user, telefone=self.cleaned_data['telefone'])
+        return user
+
+class RegisterForm(SetupForm):
+    def save(self, commit=True):
+        user = super(SetupForm, self).save(commit=False)
+        user.username = self.cleaned_data['email']
+        user.set_password(self.cleaned_data['password'])
+        user.is_staff = True
+        user.is_superuser = False  # Usuários comuns não são superusuários
         if commit:
             user.save()
             Perfil.objects.create(user=user, telefone=self.cleaned_data['telefone'])

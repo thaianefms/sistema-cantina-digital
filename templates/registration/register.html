@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Colégio Paineira</title>
+    <title>Cadastro - Colégio Paineira</title>
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -29,23 +29,23 @@
             min-height: 100vh;
             padding: 20px;
         }
-        .login-card {
+        .setup-card {
             background: #ffffff;
             border-radius: 12px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
             padding: 40px;
             width: 100%;
-            max-width: 400px;
+            max-width: 500px;
             border: 1px solid var(--border-color);
             text-align: center;
         }
-        .login-card h2 {
+        .setup-card h2 {
             color: var(--primary);
             font-size: 28px;
             font-weight: 800;
             margin-bottom: 5px;
         }
-        .login-card p {
+        .setup-card p {
             color: #64748b;
             margin-bottom: 25px;
             font-size: 15px;
@@ -53,6 +53,13 @@
         .form-group {
             margin-bottom: 20px;
             text-align: left;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        .form-row .form-group {
+            flex: 1;
         }
         label {
             display: block;
@@ -62,6 +69,7 @@
             font-size: 14px;
         }
         input[type="text"],
+        input[type="email"],
         input[type="password"] {
             width: 100%;
             padding: 14px 16px;
@@ -104,79 +112,78 @@
             margin-bottom: 20px;
             font-size: 14px;
             font-weight: 600;
+            text-align: left;
         }
-        .options-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+        .login-link {
+            margin-top: 25px;
             font-size: 14px;
+            color: #64748b;
         }
-        .options-row label {
-            margin: 0;
-            font-weight: 600;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-        .options-row input[type="checkbox"] {
-            margin-right: 8px;
-            accent-color: var(--primary);
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-        }
-        .forgot-password {
+        .login-link a {
             color: var(--primary);
             text-decoration: none;
             font-weight: 700;
-            transition: color 0.2s;
         }
-        .forgot-password:hover {
-            color: var(--primary-hover);
+        .login-link a:hover {
             text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="login-card">
+    <div class="setup-card">
         <div style="margin-bottom: 15px;">
             <img src="{% static 'android-chrome-512x512.png' %}" alt="Logo Colégio Paineira" style="width: 80px; height: 80px; border-radius: 16px;">
         </div>
         <h2 style="display:flex; align-items:center; justify-content:center; gap:10px;">
-            Cantina Paineira
+            Criar Conta
         </h2>
-        <p>Acesso Restrito</p>
+        <p>Cadastre-se para acessar o sistema da Cantina</p>
         
         {% if form.errors %}
-        <div class="error-msg">Usuário ou senha incorretos.</div>
+        <div class="error-msg">
+            Por favor, corrija os erros abaixo.
+            <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        </div>
         {% endif %}
         
         <form method="post">
             {% csrf_token %}
-            <div class="form-group">
-                <label for="id_username">Usuário</label>
-                <input type="text" name="username" autofocus required id="id_username">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="id_first_name">Nome</label>
+                    <input type="text" name="first_name" required id="id_first_name" autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="id_last_name">Sobrenome</label>
+                    <input type="text" name="last_name" required id="id_last_name">
+                </div>
             </div>
             <div class="form-group">
-                <label for="id_password">Senha</label>
+                <label for="id_email">E-mail</label>
+                <input type="email" name="email" required id="id_email">
+            </div>
+            <div class="form-group">
+                <label for="id_telefone">Telefone de Contato</label>
+                <input type="text" name="telefone" required id="id_telefone" placeholder="(11) 99999-9999">
+            </div>
+            <div class="form-group">
+                <label for="id_password">Crie uma Senha</label>
                 <input type="password" name="password" required id="id_password">
             </div>
-            
-            <div class="options-row">
-                <label>
-                    <input type="checkbox" name="lembrar_de_mim" id="lembrar_de_mim">
-                    Lembrar de mim
-                </label>
-                <a href="{% url 'password_reset' %}" class="forgot-password">Esqueceu a senha?</a>
-            </div>
-
-            <button type="submit" class="btn-primary">Entrar no Painel</button>
+            <button type="submit" class="btn-primary">Criar Conta e Acessar</button>
         </form>
 
-        <div style="margin-top: 25px; font-size: 14px; color: #64748b;">
-            Não tem uma conta? <a href="{% url 'register' %}" style="color: var(--primary); text-decoration: none; font-weight: 700;">Cadastre-se</a>
+        <div class="login-link">
+            Já tem uma conta? <a href="{% url 'login' %}">Faça login</a>
         </div>
     </div>
 </body>

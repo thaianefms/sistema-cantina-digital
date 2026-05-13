@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import login as auth_login
-from .forms import SetupForm
+from .forms import SetupForm, RegisterForm
 from django.contrib.auth.views import LoginView
 
 def setup_view(request):
@@ -19,6 +19,18 @@ def setup_view(request):
         form = SetupForm()
     
     return render(request, 'registration/setup.html', {'form': form})
+
+def register_view(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            auth_login(request, user)
+            return redirect('home')
+    else:
+        form = RegisterForm()
+    
+    return render(request, 'registration/register.html', {'form': form})
 
 class CustomLoginView(LoginView):
     def dispatch(self, request, *args, **kwargs):

@@ -17,11 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from config import views as config_views
-from usuarios.views import setup_view, CustomLoginView
+from usuarios.views import setup_view, CustomLoginView, register_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('setup/', setup_view, name='setup'),
+    path('accounts/register/', register_view, name='register'),
     path('accounts/login/', CustomLoginView.as_view(), name='login'),
     path('accounts/', include('django.contrib.auth.urls')),  # Rotas de logout e password reset nativas
     
