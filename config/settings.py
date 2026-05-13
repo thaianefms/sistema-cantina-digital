@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-c-zch#4-)l!p9e(o48$6bg^=)r7226y&#03m7n__lqo+d4a8g=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['thwartly-cnidophorous-dewayne.ngrok-free.dev', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ['https://thwartly-cnidophorous-dewayne.ngrok-free.dev']
 
 
 # Application definition
@@ -71,6 +72,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+
 
 
 # Database
